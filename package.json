@@ -1,6 +1,6 @@
 {
-  "name": "css-to-json",
-  "version": "2.1.0",
+  "name": "css-json-converter",
+  "version": "1.0.0",
   "description": "CSS-JSON-CSS javascript converter.",
   "main": "cssjson.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aramk/CSSJSON.git"
+    "url": "git+https://github.com/ccksfh/CSSJSON.git"
   },
   "authors": [
     "Aram Kocharyan https://github.com/aramk",
