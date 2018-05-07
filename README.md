@@ -1,3 +1,4 @@
+# use strict
 # CSS-JSON Converter for JavaScript
 
 CSS-JSON Converter for JavaScript  
