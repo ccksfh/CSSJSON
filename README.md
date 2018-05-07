@@ -1,4 +1,4 @@
-# use strict
+# use strict / cjs
 # CSS-JSON Converter for JavaScript
 
 CSS-JSON Converter for JavaScript  

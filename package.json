@@ -1,8 +1,8 @@
 {
   "name": "css-json-converter",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "CSS-JSON-CSS javascript converter.",
-  "main": "css-json-converter.js",
+  "main": "cssjson.js",
   "scripts": {
     "test": "test"
   },
