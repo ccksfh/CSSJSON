@@ -28,11 +28,13 @@ var CSSJSON = new function () {
     var endX = /\}/g;
     var lineX = /([^\;\{\}]*)\;/g;
     var commentX = /\/\*[\s\S]*?\*\//g;
-    var lineAttrX = /([^\:]+):([^\;]*);/;
+    // var lineAttrX = /([^\:]+):([^\;]*);/;
+    var lineAttrX = /([^\:]+):((\s*url\("?'?data:(text|image)?\/?[a-zA-Z-]*;)?[^\;]*);/;
 
     // This is used, a concatenation of all above. We use alternation to
     // capture.
-    var altX = /(\/\*[\s\S]*?\*\/)|([^\s\;\{\}][^\;\{\}]*(?=\{))|(\})|([^\;\{\}]+\;(?!\s*\*\/))/gmi;
+    var altX = /(\/\*[\s\S]*?\*\/)|([^\s\;\{\}][^\;\{\}]*(?=\{))|(\})|([^\;\:\{\}]+:(\s*url\("?'?data:(text|image)?\/?[a-zA-Z-]*;)?[^\;\{\}]+\;(?!\s*\*\/))/gmi;
+    // var altX = /(\/\*[\s\S]*?\*\/)|([^\s\;\{\}][^\;\{\}]*(?=\{))|(\})|([^\;\{\}]+\;(?!\s*\*\/))/gmi;
 
     // Capture groups
     var capComment = 1;
