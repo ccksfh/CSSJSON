@@ -11,8 +11,10 @@
 var CSSJSON = new function () {
 
     var base = this;
+    let countSel;
 
     base.init = function () {
+        countSel = {};
         // String functions
         String.prototype.trim = function () {
             return this.replace(/^\s+|\s+$/g, '');
@@ -29,11 +31,11 @@ var CSSJSON = new function () {
     var lineX = /([^\;\{\}]*)\;/g;
     var commentX = /\/\*[\s\S]*?\*\//g;
     // var lineAttrX = /([^\:]+):([^\;]*);/;
-    var lineAttrX = /([^\:]+):((\s*url\("?'?data:(text|image)?\/?[a-zA-Z-]*;)?[^\;]*);/;
+    var lineAttrX = /([^\:]+):((\s*url\("?'?data:\w*\/?[^;]*;(charset=[^;]+;)?[^"')]+"?'?\)[^;,]*,?)*[^\;]*);/;
 
     // This is used, a concatenation of all above. We use alternation to
     // capture.
-    var altX = /(\/\*[\s\S]*?\*\/)|([^\s\;\{\}][^\;\{\}]*(?=\{))|(\})|([^\;\:\{\}]+:(\s*url\("?'?data:(text|image)?\/?[a-zA-Z-]*;)?[^\;\{\}]+\;(?!\s*\*\/))/gmi;
+    var altX = /(\/\*[\s\S]*?\*\/)|([^\s\;\{\}][^\;\{\}]*(?=\{))|(\})|([^\;\:\{\}]+:(\s*url\("?'?data:\w*\/?[^;]*;(charset=[^;]+;)?[^"')]+"?'?\)[^;,]*,?)*[^\;\{\}]*\;(?!\s*\*\/))/gmi;
     // var altX = /(\/\*[\s\S]*?\*\/)|([^\s\;\{\}][^\;\{\}]*(?=\{))|(\})|([^\;\{\}]+\;(?!\s*\*\/))/gmi;
 
     // Capture groups
@@ -112,8 +114,23 @@ var CSSJSON = new function () {
                     for (var i = 0; i < bits.length; i++) {
                         var sel = bits[i].trim();
                         if (sel in node.children) {
+                            if (node.children[sel]) {
+                                countSel[sel] = countSel[sel] ? countSel[sel] + 1 : 1;
+                                let tail = '';
+                                for (let c = 1; c <= countSel[sel]; c++) {
+                                    tail += ' ';
+                                }
+                                sel = sel + tail;
+                                node.children[sel] = {
+                                    children: {},
+                                    attributes: {}
+                                };
+                            }
                             for (var att in newNode.attributes) {
                                 node.children[sel].attributes[att] = newNode.attributes[att];
+                            }
+                            for (var child in newNode.children) {
+                                node.children[sel].children[child] = newNode.children[child];
                             }
                         } else {
                             node.children[sel] = newNode;
@@ -152,6 +169,21 @@ var CSSJSON = new function () {
                     node[count++] = line;
                 }
             }
+        }
+
+        // media 之间是有顺序的，不能搞乱了，可是转成 obj 之后就乱序了
+        let medias = [];
+        for (var n in node.children) {
+            if (/^@media/.test(n)) {
+                medias.push({
+                    name: n,
+                    val: node.children[n]
+                });
+                delete node.children[n];
+            }
+        }
+        for (var m of medias) {
+            node.children[m.name] = m.val;
         }
 
         return node;
